@@ -1,11 +1,31 @@
 import { faStackOverflow } from '@fortawesome/free-brands-svg-icons/faStackOverflow'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { registerApi } from '../services/allApi'
 
-function Auth({register}) {
+
+function Auth({ register }) {
+  const [userDetails, setUserDetails] = useState({
+    username:"", 
+    email:"", 
+    password:""
+  })
+  console.log(userDetails);
+
+  const handleRegister = async ()=>{
+    const {username, email, password} = userDetails
+    if(!username || !email || !password ){
+      alert("please fill the form")
+    }else{
+          const result = await registerApi(userDetails)
+          console.log(result);
+          
+    } 
+  }
+  
   return (
     <>
       <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -24,13 +44,13 @@ function Auth({register}) {
 
 
                   {register && <div className="mb-3 ">
-                    <input type="text" placeholder='Username'  className='form-control rounded-0'  />
+                    <input type="text" placeholder='Username' className='form-control rounded-0' onChange={(e)=>setUserDetails({...userDetails, username:e.target.value})} />
                   </div>}
                   <div className="mb-3 ">
-                    <input type="text" placeholder='Email ID'  className='form-control rounded-0'  />
+                    <input type="text" placeholder='Email ID' className='form-control rounded-0' onChange={(e)=>setUserDetails({...userDetails, email:e.target.value})}/>
                   </div>
                   <div className="mb-3">
-                    <input type="text" placeholder='Password'  className='form-control rounded-0' />
+                    <input type="text" placeholder='Password' className='form-control rounded-0' onChange={(e)=>setUserDetails({...userDetails, password:e.target.value})}/>
                   </div>
                   <div className="mb-3">
 
@@ -42,7 +62,7 @@ function Auth({register}) {
 
                       :
                       <div>
-                        <button  type='button' className='btn btn-warning w-100 rounded-0'>Register</button>
+                        <button onClick={handleRegister} type='button' className='btn btn-warning w-100 rounded-0'>Register</button>
                         <p className='mt-3'>Already a User? click Here to <Link to={'/login'} className='text-danger'> Login</Link></p>
                       </div>}
                   </div>
