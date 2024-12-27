@@ -3,11 +3,15 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import { registerApi } from '../services/allApi'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { loginApi, registerApi } from '../services/allApi'
+import { ToastContainer, toast } from 'react-toastify';
 
 
 function Auth({ register }) {
+
+  const nagivate = useNavigate()
+
   const [userDetails, setUserDetails] = useState({
     username:"", 
     email:"", 
@@ -18,12 +22,57 @@ function Auth({ register }) {
   const handleRegister = async ()=>{
     const {username, email, password} = userDetails
     if(!username || !email || !password ){
-      alert("please fill the form")
+      toast.info("please fill the form")
     }else{
           const result = await registerApi(userDetails)
           console.log(result);
-          
+           
+          if(result.status == 200){
+            toast.success(`Registraction Successfull`)
+            setUserDetails({
+              username:"", 
+              email:"", 
+              password:""
+            })  
+            nagivate('/login')
+          }
+          else if(result.status==406){
+            toast.warning(result.response.data)
+          }
+          else{
+            toast.error(`Something Went Wrong`)
+          }
     } 
+  }
+
+  const handleLogin = async ()=>{
+    const {email, password } = userDetails
+    if(!email || !password){
+      toast.info(`Fill the Form Completely`)
+    }
+    else{
+      const result = await loginApi({email, password})
+      console.log(result);
+      if(result.status==200){
+        toast.success('Login Successfull')
+
+        sessionStorage.setItem("existingUser", JSON.stringify(result.data.existingUser))
+        sessionStorage.setItem("token", result.data.token)
+
+        setUserDetails({
+          username:"", 
+          email:"", 
+          password:""
+        })
+        setTimeout(()=>{
+          nagivate('/')
+        },2000)
+      }else if(result.status==406){
+        toast.warning(result.response.data)
+      }else{
+        toast.error(`Something Went Wrong`)
+      }
+    }
   }
   
   return (
@@ -44,19 +93,19 @@ function Auth({ register }) {
 
 
                   {register && <div className="mb-3 ">
-                    <input type="text" placeholder='Username' className='form-control rounded-0' onChange={(e)=>setUserDetails({...userDetails, username:e.target.value})} />
+                    <input type="text" placeholder='Username' value={userDetails.username} className='form-control rounded-0' onChange={(e)=>setUserDetails({...userDetails, username:e.target.value})} />
                   </div>}
                   <div className="mb-3 ">
-                    <input type="text" placeholder='Email ID' className='form-control rounded-0' onChange={(e)=>setUserDetails({...userDetails, email:e.target.value})}/>
+                    <input type="text" placeholder='Email ID' value={userDetails.email} className='form-control rounded-0' onChange={(e)=>setUserDetails({...userDetails, email:e.target.value})}/>
                   </div>
                   <div className="mb-3">
-                    <input type="text" placeholder='Password' className='form-control rounded-0' onChange={(e)=>setUserDetails({...userDetails, password:e.target.value})}/>
+                    <input type="text" placeholder='Password' value={userDetails.password} className='form-control rounded-0' onChange={(e)=>setUserDetails({...userDetails, password:e.target.value})}/>
                   </div>
                   <div className="mb-3">
 
                     {!register ?
                       <div>
-                        <button type='button' className='btn btn-warning w-100 rounded-0'>Login</button>
+                        <button type='button' className='btn btn-warning w-100 rounded-0' onClick={handleLogin}>Login</button>
                         <p className='mt-3'>New User? click Here to<Link to={'/register'} className='text-danger'> Register</Link></p>
                       </div>
 
@@ -73,6 +122,7 @@ function Auth({ register }) {
         </div>
 
       </div>
+      <ToastContainer position="top-center" autoClose={2000} theme="colored"/>
     </>
   )
 }
