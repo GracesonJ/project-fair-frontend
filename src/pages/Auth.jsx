@@ -69,8 +69,18 @@ function Auth({ register }) {
         },2000)
       }else if(result.status==406){
         toast.warning(result.response.data)
+        setUserDetails({
+          username:"", 
+          email:"", 
+          password:""
+        })
       }else{
         toast.error(`Something Went Wrong`)
+        setUserDetails({
+          username:"", 
+          email:"", 
+          password:""
+        })
       }
     }
   }

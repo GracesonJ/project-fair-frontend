@@ -1,12 +1,23 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import photo from "../assets/designer.svg"
 import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
 
 
 function Home() {
+
+  const [isLogin, setIsLogin] = useState(false)
+
+  useEffect(()=>{
+    if(sessionStorage.getItem("token")){
+      setIsLogin(true)
+    }else{
+      setIsLogin(false)
+    }
+
+  },[])
   return (
     <>
         <div style={{height:"100vh"}} className='bg-success p-5'>
@@ -15,8 +26,14 @@ function Home() {
                 <div className="col-md-6">
                     <h1 style={{fontSize:"70px"}}>Project Fair</h1>
                     <p>One stop destination for all software development Projects</p>
-                    <Link to={'/login'}><button className='btn text-light p-1 mt-3'>Get Started <FontAwesomeIcon icon={faArrowRight} /></button></Link>
+
+                    {
+                    isLogin == false? 
+                    <Link to={'/login'}><button className='btn text-light p-1 mt-3'>Get Started <FontAwesomeIcon icon={faArrowRight} /></button></Link> 
+                    :
                     <Link to={'/dashboard'}><button className='btn text-light p-1 mt-3'>Manage Projects <FontAwesomeIcon icon={faArrowRight} /></button></Link>
+                    }
+
                 </div>
                 <div className="col-md-6 mt-5 mt-md-0 d-flex justify-content-center">
                     <img src={photo} alt="no img" className='w-75' />
