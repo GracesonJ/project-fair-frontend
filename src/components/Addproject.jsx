@@ -3,12 +3,17 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { addProjectApi } from '../services/allApi';
 
 function Addproject() {
 
     const [show, setShow] = useState(false)
     const [preview, setPreview] = useState("")
     console.log(preview);
+    const [token, setToken] = useState("")
+    console.log(token);
+
 
     const [projectDetails, setProjectDetails] = useState({
         title: "",
@@ -36,7 +41,9 @@ function Addproject() {
         setShow(false)
         handleCancel()
     };
+
     const handleShow = () => setShow(true);
+
     const handleCancel = () => {
         setProjectDetails({
             title: "",
@@ -48,14 +55,41 @@ function Addproject() {
         })
         setPreview("")
     }
-    const handleAdd = () => {
+    const handleAdd = async () => {
         const { title, language, github, website, overview, projectImage } = projectDetails
         if (!title || !language || !github || website || !overview || !projectImage) {
             toast.info(`Fill the form completely`)
-        }else{
-            
+        } else {
+            // append() - if the body contains uploaded contend then the request body should be created with the help of append method in fromData class - inshort request body should be a fromData
+            const reqBody = new FormData()
+
+            reqBody.append("title", title)
+            reqBody.append("language", language)
+            reqBody.append("github", github)
+            reqBody.append("website", website)
+            reqBody.append("overview", overview)
+            reqBody.append("projectImage", projectImage)
+
+            if (token) {
+                const reqHeader = {
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": `Bearer ${token}`
+                }
+                const result = await addProjectApi(reqBody, reqHeader)
+                console.log(result);
+            } else {
+                toast.warning(`Please Login`)
+            }
         }
     }
+    
+    useEffect(() => {
+        if (sessionStorage.getItem('token')) {
+            setToken(sessionStorage.getItem("token"))
+        }
+    }, [])
+
+
     return (
         <>
             <button onClick={handleShow} className='btn btn-success rounded-0'>Add Project</button>
@@ -105,8 +139,9 @@ function Addproject() {
                         Add
                     </Button>
                 </Modal.Footer>
+                <ToastContainer position="top-center" autoClose={2000} theme="colored" />
+
             </Modal>
-            <ToastContainer position="top-center" autoClose={2000} theme="colored" />
         </>
     )
 }
