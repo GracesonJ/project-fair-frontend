@@ -14,6 +14,8 @@ function Addproject() {
     const [token, setToken] = useState("")
     console.log(token);
 
+    const [key, setKey] = useState(1)
+
 
     const [projectDetails, setProjectDetails] = useState({
         title: "",
@@ -54,7 +56,13 @@ function Addproject() {
             projectImage: ""
         })
         setPreview("")
+        if(key==1){
+            setKey(0)
+        }else{
+            setKey(1)
+        }
     }
+    
     const handleAdd = async () => {
         const { title, language, github, website, overview, projectImage } = projectDetails
         if (!title || !language || !github || website || !overview || !projectImage) {
@@ -103,7 +111,7 @@ function Addproject() {
                         <div className="row">
                             <div className="col-md-6">
                                 <label htmlFor="projectImage">
-                                    <input id='projectImage' type="file" style={{ display: "none" }} onChange={(e) => handleFile(e)} />
+                                    <input id='projectImage' type="file" style={{ display: "none" }} key={key} onChange={(e) => handleFile(e)} />
                                     <img src={preview ? preview : "https://img.freepik.com/premium-vector/add-file-icon-vector-image-can-be-used-documents-files_120816-133612.jpg"} alt="no image" className='w-100' />
                                 </label>
                             </div>
