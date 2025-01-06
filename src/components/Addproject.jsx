@@ -56,16 +56,16 @@ function Addproject() {
             projectImage: ""
         })
         setPreview("")
-        if(key==1){
+        if (key == 1) {
             setKey(0)
-        }else{
+        } else {
             setKey(1)
         }
     }
-    
+
     const handleAdd = async () => {
         const { title, language, github, website, overview, projectImage } = projectDetails
-        if (!title || !language || !github || website || !overview || !projectImage) {
+        if (!title || !language || !github || !website || !overview || !projectImage) {
             toast.info(`Fill the form completely`)
         } else {
             // append() - if the body contains uploaded contend then the request body should be created with the help of append method in fromData class - inshort request body should be a fromData
@@ -85,12 +85,24 @@ function Addproject() {
                 }
                 const result = await addProjectApi(reqBody, reqHeader)
                 console.log(result);
+                if(result.status==200){
+                    toast.success(`Project Added successfully`)
+                   setTimeout(()=>{
+                    handleClose()
+                   },2000)
+                }else if(result.status == 406){
+                    toast.warning(result.response.data)
+                    handleCancel()
+                }else{
+                    toast.error(`Something went wrong`)
+                    handleClose()
+                }       
             } else {
                 toast.warning(`Please Login`)
             }
         }
     }
-    
+
     useEffect(() => {
         if (sessionStorage.getItem('token')) {
             setToken(sessionStorage.getItem("token"))
