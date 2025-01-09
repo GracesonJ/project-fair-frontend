@@ -85,18 +85,18 @@ function Addproject() {
                 }
                 const result = await addProjectApi(reqBody, reqHeader)
                 console.log(result);
-                if(result.status==200){
+                if (result.status == 200) {
                     toast.success(`Project Added successfully`)
-                   setTimeout(()=>{
-                    handleClose()
-                   },2000)
-                }else if(result.status == 406){
+                    setTimeout(() => {
+                        handleClose()
+                    }, 2000)
+                } else if (result.status == 406) {
                     toast.warning(result.response.data)
                     handleCancel()
-                }else{
+                } else {
                     toast.error(`Something went wrong`)
                     handleClose()
-                }       
+                }
             } else {
                 toast.warning(`Please Login`)
             }
