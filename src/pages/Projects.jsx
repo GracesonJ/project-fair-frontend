@@ -10,27 +10,36 @@ import { allProjectApi } from '../services/allApi'
 function Projects() {
   const [allproject, setAllProjects] = useState([])
   const [token, setToken] = useState("")
+  const [searchKey, setSearchKey] = useState("")
+
   const getAllProject = async () => {
-    if (token) {
+    if (sessionStorage.getItem("token")) {
+      const token = sessionStorage.getItem('token')
       const reqHeader = {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
-    }
-      const result = await allProjectApi(reqHeader)
+      }
+      const result = await allProjectApi(searchKey, reqHeader)
       // console.log(result.data);
       setAllProjects(result.data)
     }
   }
   console.log(allproject);
   console.log(token);
+  console.log(searchKey);
 
+  useEffect(() => {
+    getAllProject()
+  },[searchKey])
 
   useEffect(() => {
     getAllProject()
     if (sessionStorage.getItem('token')) {
       setToken(sessionStorage.getItem('token'))
     }
-  }, [])
+  },[])
+
+ 
 
   return (
     <>
@@ -60,7 +69,7 @@ function Projects() {
               <div className="row">
                 <div className="col-md-4"></div>
                 <div className="col-md-4 d-flex">
-                  <input type="text" placeholder='Technologies' className='form-control shadow ' />
+                  <input onChange={(e) => setSearchKey(e.target.value)} type="text" placeholder='Technologies' className='form-control shadow ' />
                   <FontAwesomeIcon style={{ color: 'lightgrey', marginTop: "11.5px", marginLeft: "-30px" }} icon={faMagnifyingGlass} />
                 </div>
                 <div className="col-md-4"></div>
