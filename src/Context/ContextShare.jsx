@@ -7,7 +7,7 @@ function ContextShare({children}) {
     const [addResponse, setAddResponse] = useState([])
     return (
         <>
-            <addResponseContext.Provider value={{addRespons, setAddResponse}}>
+            <addResponseContext.Provider value={{addResponse, setAddResponse}}>
                 {children}
             </addResponseContext.Provider>
         </>

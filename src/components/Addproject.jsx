@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addProjectApi } from '../services/allApi';
+import { addResponseContext } from '../Context/ContextShare';
 
 function Addproject() {
 
     const [show, setShow] = useState(false)
+
+    const {setAddResponse} = useContext(addResponseContext)
     const [preview, setPreview] = useState("")
     console.log(preview);
     const [token, setToken] = useState("")
@@ -90,6 +93,9 @@ function Addproject() {
                     setTimeout(() => {
                         handleClose()
                     }, 2000)
+
+                    setAddResponse(result)
+
                 } else if (result.status == 406) {
                     toast.warning(result.response.data)
                     handleCancel()

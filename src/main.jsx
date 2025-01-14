@@ -6,12 +6,13 @@ import './bootstrap.min.css'
 import { BrowserRouter } from 'react-router-dom'
 import ContextShare from './Context/ContextShare.jsx'
 
- 
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-    <ContextShare>  <App /></ContextShare>
+      <ContextShare>
+        <App />
+      </ContextShare>
     </BrowserRouter>
-    
-  </StrictMode>,
+  </StrictMode>
 )
