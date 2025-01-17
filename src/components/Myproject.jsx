@@ -6,14 +6,15 @@ import { faGlobe, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { removeUserProjectApi, userProjectApi } from '../services/allApi'
 import { Link } from 'react-router-dom'
-import { addResponseContext } from '../Context/ContextShare'
+import { addResponseContext, editResponseContext } from '../Context/ContextShare'
 
 
 function Myproject() {
     const [userProject, setUserProject] = useState([])
 
     const { addResponse } = useContext(addResponseContext)
-    const [removeStatus, setRemoveStatus] = useState({})
+    const { editResponse} = useContext(editResponseContext)
+    const [ removeStatus, setRemoveStatus ] = useState({})
 
     const getUserProject = async () => {
         if (sessionStorage.getItem("token")) {
@@ -50,7 +51,7 @@ function Myproject() {
 
     useEffect(() => {
         getUserProject()
-    }, [addResponse, removeStatus])
+    }, [addResponse, removeStatus, editResponse])
 
     return (
         <>

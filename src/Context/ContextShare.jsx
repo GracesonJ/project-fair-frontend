@@ -1,14 +1,18 @@
 import React, { createContext, useState } from 'react'
 
 export const addResponseContext = createContext({})
+export const editResponseContext = createContext({})
 
-function ContextShare({children}) {
+function ContextShare({ children }) {
 
     const [addResponse, setAddResponse] = useState([])
+    const [editResponse, setEditResponse] = useState([])
     return (
         <>
-            <addResponseContext.Provider value={{addResponse, setAddResponse}}>
-                {children}
+            <addResponseContext.Provider value={{ addResponse, setAddResponse }}>
+                <editResponseContext.Provider value={{ editResponse, setEditResponse }}>
+                    {children}
+                </editResponseContext.Provider>
             </addResponseContext.Provider>
         </>
     )

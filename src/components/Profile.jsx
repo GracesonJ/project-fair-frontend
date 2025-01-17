@@ -1,8 +1,29 @@
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 
 function Profile() {
+
+  const [userDetails, SetUserDetails] = useState({
+      username:"",
+      email:"",
+      password:"",
+      profile:"",
+      github:"",
+      linkedin:""
+  })
+
+  const [ existingImg, setExistingImg] = useState("")
+  console.log(userDetails);
+useEffect(()=>{
+  if(sessionStorage.getItem("existingUser")){
+    const user = JSON.parse(sessionStorage.getItem("existingUser"))
+    console.log(user);
+    SetUserDetails({...userDetails, username:user.username, email:user.email, password:user.password, github:user.github, linkedin:user.linkedin})
+    setExistingImg(user.profile)
+    
+  }
+},[])
   return (
     <>
       <div className="p-4 shadow">
@@ -17,10 +38,10 @@ function Profile() {
           </label>
           <div className='w-100'>
             <div className="mb-3">
-              <input type="text" placeholder='Github' className='form-control' />
+              <input type="text" placeholder='Github' className='form-control' value={userDetails?.github} onChange={(e)=>SetUserDetails({...userDetails, github:e.target.value})}/>
             </div>
             <div className="mb-4">
-              <input type="text" placeholder='LinkedIn' className='form-control' />
+              <input type="text" placeholder='LinkedIn' className='form-control' value={userDetails?.linkedin} onChange={(e)=>SetUserDetails({...userDetails, linkedin:e.target.value})} />
             </div>
             <div className="mb-2 text-center">
               <button className='btn btn-success w-75 mt-2'>Update</button>
