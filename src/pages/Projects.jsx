@@ -50,7 +50,8 @@ function Projects() {
 
         {/* Not Login */}
 
-        {!token ? <div className="container-fluid">
+        {!token ? 
+        <div className="container-fluid">
           <div className="row">
             <div className="col-md-3"></div>
             <div className="col-md-6 d-flex justify-content-center align-items-center flex-column">
@@ -60,10 +61,7 @@ function Projects() {
             <div className="col-md-3"></div>
           </div>
         </div>
-
           :
-
-
           <div className="mt-5">
             <div className="container">
               <div className="row">
